@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator Titik P</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HA TE EM EL -->
+<div class="wrap">
+  <!-- juduls, my nama jeneng, NIM aku, dan tombol ganti tema gelap terang -->
+  <header class="top">
+    <div>
+      <h1>Tugas Membuat Program Pengikatan ke Muka (Intersection)</h1>
+      <p class="who">Excelsa Kemalahayati</p>
+      <p class="nim">25/556893/SV/26044</p>
+      <p class="lede">Hitung koordinat titik P dari dua titik kontrol A dan B serta sudut α di A dan β di B.</p>
+    </div>
+    <button id="themeBtn" class="btn-ghost" type="button">Ganti tema</button>
+  </header>
+  <div class="ruler" aria-hidden="true"></div>
+
+  <!-- kiri = formulir input, kanan = hasil dan plot plsssss woyyy huhuh-->
+  <main class="layout">
+    <!--  input semua isian yang diisi -->
+    <form id="form" class="inputs" novalidate autocomplete="off">
+      <section class="step">
+        <!-- Langkah 1: koordinat titik kontrol A dan B, penecetan pakai data contoh trus hhapus semua isian -->
+        <h2><span class="n">1</span>Koordinat titik kontrol</h2>
+        <div class="sample-row">
+          <button class="btn-ghost sample-btn" type="button" id="resetBtn">Pakai data contoh</button>
+          <button class="btn-ghost" type="button" id="clearBtn">Hapus semua isian</button>
+        </div>
+        <p class="pt">Titik A</p>
+        <div class="grid2">
+          <div class="field"><label for="xA">x<sub>A</sub> <span class="u">m</span></label><input type="text" id="xA" inputmode="decimal"></div>
+          <div class="field"><label for="yA">y<sub>A</sub> <span class="u">m</span></label><input type="text" id="yA" inputmode="decimal"></div>
+        </div>
+        <p class="pt" style="margin-top:14px">Titik B</p>
+        <div class="grid2">
+          <div class="field"><label for="xB">x<sub>B</sub> <span class="u">m</span></label><input type="text" id="xB" inputmode="decimal"></div>
+          <div class="field"><label for="yB">y<sub>B</sub> <span class="u">m</span></label><input type="text" id="yB" inputmode="decimal"></div>
+        </div>
+      </section>
+
+      <section class="step">
+        <!-- Langkah 2: sudut α dan β (pilih mana D° M′ S″ or desimals cihuyyyy) -->
+        <h2><span class="n">2</span>Sudut ukuran</h2>
+        <div class="seg" role="radiogroup" aria-label="Format sudut" style="margin-bottom:14px">
+          <input type="radio" name="fmt" id="fmtDms" value="dms" checked><label for="fmtDms">D° M′ S″</label>
+          <input type="radio" name="fmt" id="fmtDec" value="dec"><label for="fmtDec">Desimal</label>
+        </div>
+        <div class="group">
+          <fieldset class="field">
+            <legend class="lab">Sudut α di titik A</legend>
+            <div class="dms" id="aDms">
+              <div class="sfx"><input type="text" id="aD" inputmode="decimal" aria-label="Derajat α"><span>°</span></div>
+              <div class="sfx"><input type="text" id="aM" inputmode="decimal" aria-label="Menit α"><span>′</span></div>
+              <div class="sfx"><input type="text" id="aS" inputmode="decimal" aria-label="Detik α"><span>″</span></div>
+            </div>
+            <div class="sfx" id="aDecWrap" hidden><input type="text" id="aDec" inputmode="decimal" aria-label="Sudut α desimal"><span>°</span></div>
+          </fieldset>
+          <fieldset class="field">
+            <legend class="lab">Sudut β di titik B</legend>
+            <div class="dms" id="bDms">
+              <div class="sfx"><input type="text" id="bD" inputmode="decimal" aria-label="Derajat β"><span>°</span></div>
+              <div class="sfx"><input type="text" id="bM" inputmode="decimal" aria-label="Menit β"><span>′</span></div>
+              <div class="sfx"><input type="text" id="bS" inputmode="decimal" aria-label="Detik β"><span>″</span></div>
+            </div>
+            <div class="sfx" id="bDecWrap" hidden><input type="text" id="bDec" inputmode="decimal" aria-label="Sudut β desimal"><span>°</span></div>
+          </fieldset>
+        </div>
+      </section>
+
+      <section class="step">
+        <!-- Langkah 3: pilih metode (Sudut-Jarak atau Sudut-Sudut) dan posisi P (kiri atau kanan garis seko A→B) -->
+        <h2><span class="n">3</span>Metode pengolahan</h2>
+        <div class="opts" role="radiogroup" aria-label="Metode">
+          <div class="opt"><input type="radio" name="method" id="m1" value="1"><label for="m1"><b>Sudut-Jarak</b><small>Sudut α dari baseline AB dan jarak AP.</small></label></div>
+          <div class="opt"><input type="radio" name="method" id="m2" value="2"><label for="m2"><b>Sudut-Sudut</b><small>Sudut α dan β, titik potong garis AP dan BP dengan matriks.</small></label></div>
+        </div>
+        <div class="field" style="margin-top:14px">
+          <span class="lab">Posisi P terhadap garis A→B</span>
+          <div class="seg" role="radiogroup" aria-label="Posisi P">
+            <input type="radio" name="side" id="sideL" value="kiri"><label for="sideL">Kiri</label>
+            <input type="radio" name="side" id="sideR" value="kanan"><label for="sideR">Kanan</label>
+          </div>
+        </div>
+      </section>
+
+      <section class="step">
+        <!-- Langkah 4: tombol Hitung titik P yoks hitung hitung-->
+        <h2><span class="n">4</span>Hitung</h2>
+        <div class="row">
+          <button class="btn" type="submit">Hitung titik P</button>
+        </div>
+        <p class="hint">Hasil ikut berubah setiap kali data diubah.</p>
+      </section>
+    </form>
+
+    <!-- isi lengkap bener hasil munculsssss -->
+    <section class="out" aria-live="polite">
+      <!-- isian belum lengkap yoks ofo -->
+      <p id="empty" class="empty" hidden>Lengkapi isian: koordinat titik A dan B, sudut α dan β, metode pengolahan, dan posisi P terhadap garis A→B. Atau klik “Pakai data contoh” di bawah judul 1.</p>
+      <!-- Pesan error merah (misalnya sudut tidak valdi) -->
+      <div id="alert" class="alert" role="alert" hidden></div>
+      <!-- hasil nih ringksan, tabel, plot iku dah pokoke -->
+      <div id="result">
+        <div class="card">
+          <div class="card-h"><span>Ringkasan hasil</span><span class="card-btns"><button class="btn-s" type="button" id="copyBtn">Salin hasil</button><button class="btn-s" type="button" id="dlBtn">Unduh</button></span></div>
+          <div class="hero">
+            <div><div class="l">x<sub>P</sub></div><div class="v" id="pX"></div></div>
+            <div><div class="l">y<sub>P</sub></div><div class="v" id="pY"></div></div>
+          </div>
+          <table class="rt"><tbody id="rows"></tbody></table>
+        </div>
+        <textarea id="copyBox" class="copybox" readonly hidden aria-label="Teks hasil untuk disalin"></textarea>
+
+        <!-- plot bolo -->
+        <div class="plot-wrap">
+          <h2>Plot segitiga A–P–B</h2>
+          <div class="zoombar" role="group" aria-label="Zoom plot">
+            <button class="btn-ghost" type="button" id="zIn" aria-label="Perbesar plot">Perbesar +</button>
+            <button class="btn-ghost" type="button" id="zOut" aria-label="Perkecil plot">Perkecil −</button>
+            <button class="btn-ghost" type="button" id="zReset">Reset zoom</button>
+            <span class="zhint">Saat diperbesar, geser dengan jari atau mouse.</span>
+          </div>
+          <div class="plot" id="plot"></div>
+          <div class="cap">
+            <span class="key"><i class="k1"></i>Baseline AB, panah menunjukkan arah A→B</span>
+            <span class="key"><i class="k2"></i>Garis AP dan BP</span>
+            <span id="gridCap"></span>
+          </div>
+          <p class="geonote">Kondisi geometri optimal tercapai saat sudut γ mendekati 90°, sedangkan sudut yang terlalu kecil atau mendekati 180° mengindikasikan struktur geometrinya lemah.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- penjelasan hitungan kotak jadi 3 asek josjis -->
+  <section class="outer-wrap" id="explain">
+  <details class="outer">
+  <summary><span class="otitle"><span>Penjelasan langkah perhitungan</span><small>(klik untuk melihat langkah)</small></span><span class="chev" aria-hidden="true"></span></summary>
+  <div class="inner">
+  <!-- Bagian 1: Langkah perhitungan dari titik A asek-->
+  <section class="work" id="workSec">
+    <h3>Langkah perhitungan</h3>
+    <p class="note">Klik tiap langkah untuk melihat rumus, substitusi angka, dan hasilnya. Label IF menunjukkan cabang yang dipakai untuk data saat ini.</p>
+    <div class="tools">
+      <button class="btn-ghost" type="button" data-acc="steps" data-open="1">Buka semua</button>
+      <button class="btn-ghost" type="button" data-acc="steps" data-open="0">Tutup semua</button>
+    </div>
+    <div class="acc" id="steps"></div>
+  </section>
+
+  <!-- Bagian 2: Pembandingnya, dari titik B buahahahhaha -->
+  <section class="work" id="chkSec">
+    <h3>Pembanding dari titik B</h3>
+    <p class="note" id="chkNote"></p>
+    <div id="chkSum"></div>
+    <div class="tools" id="chkTools">
+      <button class="btn-ghost" type="button" data-acc="chkSteps" data-open="1">Buka semua</button>
+      <button class="btn-ghost" type="button" data-acc="chkSteps" data-open="0">Tutup semua</button>
+    </div>
+    <div class="acc" id="chkSteps"></div>
+  </section>
+
+  <!-- Bagian 3: rerata A sama B biar duduk sama rata berdiri sama sama-->
+  <section class="work" id="finSec">
+    <h3>Koordinat akhir (rerata A dan B)</h3>
+    <p class="note" id="finNote"></p>
+    <div id="finSum"></div>
+    <div class="tools" id="finTools">
+      <button class="btn-ghost" type="button" data-acc="finSteps" data-open="1">Buka semua</button>
+      <button class="btn-ghost" type="button" data-acc="finSteps" data-open="0">Tutup semua</button>
+    </div>
+    <div class="acc" id="finSteps"></div>
+  </section>
+  </div>
+  </details>
+  </section>
+
+  <footer>Konvensi: x searah Timur, y searah Utara. Azimuth diukur searah jarum jam dari Utara. Jarak dalam meter.</footer>
+
+  <!-- juduls nama nimmmmmm -->
+  <div class="sign">
+    <div class="sg-t">Tugas Membuat Program Pengikatan ke Muka (Intersection)</div>
+    <div class="sg-n">Excelsa Kemalahayati</div>
+    <div class="sg-id">25/556893/SV/26044</div>
+  </div>
+</div>
+
+<!-- yoks iki reks -->
+<script src="script.js"></script>
+
+</body>
+</html>
+

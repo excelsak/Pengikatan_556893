@@ -1,0 +1,232 @@
+/* leyot */
+/*CSS pls warna, ukuran, tata letak)
+   1. nah iki warna dan font pls bisa (--accent = oranye, --bg = latar, dst banyak pokoke) */
+:root{
+  --bg:#F4F2EF; --surface:#FFFFFF; --ink:#1F1A16; --muted:#6A6058; --line:#E2DCD5;
+  --accent:#FF7A00; --accent-ink:#B04C00; --accent-soft:#FFEBD6; --on-accent:#1A0E00;
+  --bad:#B3261E; --bad-soft:#FBE4E1;
+  --font-display:'Barlow Condensed','Arial Narrow',sans-serif;
+  --font-body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+/* black mode biar ga silaw */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#13100D; --surface:#1C1814; --ink:#F2EBE3; --muted:#A39888; --line:#352E27;
+    --accent-ink:#FF9B42; --accent-soft:#3B2410; --bad:#FF8A80; --bad-soft:#3A1B18;
+    color-scheme:dark;
+  }
+}
+/* manual nih klik tombols agar gelap, heh ojoks erorrrrr huhu */
+:root[data-theme="dark"]{
+  --bg:#13100D; --surface:#1C1814; --ink:#F2EBE3; --muted:#A39888; --line:#352E27;
+  --accent-ink:#FF9B42; --accent-soft:#3B2410; --bad:#FF8A80; --bad-soft:#3A1B18;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--font-body); font-size:15px; line-height:1.5;
+  padding-block:0 40px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap{max-width:1180px;margin:0 auto}
+sub{font-size:.75em;line-height:0}
+/* makasih yaallah akhirnya ketemu masalah e */
+[hidden]{display:none!important}
+
+/* heder */
+/* judul eksel josjis */
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-block:26px 16px}
+.kicker{margin:0 0 4px;font:600 12px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+.top>div:first-child{flex:1 1 420px;min-width:0}
+h1{margin:0;font:700 clamp(28px,4.8vw,44px)/1.05 var(--font-display);letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+.who{margin:8px 0 0;font:600 18px var(--font-body);color:var(--accent-ink)}
+.nim{margin:2px 0 0;font:500 14px var(--font-mono);color:var(--accent-ink)}
+.lede{margin:8px 0 0;color:var(--muted);max-width:56ch}
+/* Garis penggrais estetik surveyor asek */
+.ruler{height:14px;border-bottom:2px solid var(--accent);
+  background:
+    linear-gradient(90deg,var(--accent) 0 2px,transparent 2px) 0 100%/40px 14px repeat-x,
+    linear-gradient(90deg,var(--accent) 0 1px,transparent 1px) 0 100%/8px 7px repeat-x}
+
+/* leyot */
+/* pls pls jangan rusak di HP satu kolom; di layar lebar (980px ke atas) form kiri hasil kanan yakan bener*/
+.layout{display:grid;gap:30px;grid-template-columns:minmax(0,1fr);padding-top:26px}
+@media (min-width:980px){.layout{grid-template-columns:372px minmax(0,1fr);align-items:start}}
+
+/* inputs lebokkan semua */
+/* (1 Koordinat, 2 Sudut, 3 Metode, 4 Hitung) */
+.step{border-top:1px solid var(--line);padding-block:18px 20px}
+.step:first-child{border-top:2px solid var(--ink)}
+.step h2{margin:0 0 12px;display:flex;align-items:center;gap:10px;font:600 20px var(--font-display);letter-spacing:.03em;text-transform:uppercase}
+.n{display:grid;place-items:center;width:24px;height:24px;border:1.5px solid var(--accent);border-radius:4px;color:var(--accent-ink);font:600 12px var(--font-mono)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+fieldset.field{border:0;padding:0;margin:0;min-width:0}
+fieldset.field>legend{padding:0;margin-bottom:5px}
+.field>label,.lab{font-size:13px;color:var(--muted);font-weight:500}
+.field .u{font:400 11px var(--font-mono);color:var(--muted);margin-left:4px}
+.pt{margin:0 0 8px;font:600 13px var(--font-mono);color:var(--ink)}
+.group{display:grid;gap:12px}
+input[type=text]{
+  min-height:44px;width:100%;min-width:0;background:var(--surface);color:var(--ink);
+  border:1px solid var(--line);border-radius:6px;padding:9px 10px;
+  font:500 15px var(--font-mono);font-variant-numeric:tabular-nums;
+}
+input[type=text]:hover{border-color:var(--muted)}
+input[type=text]:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+/* Tiga kotak Derajat, Menit, Detik berdampingan work yey */
+.dms{display:grid;grid-template-columns:1.1fr 1fr 1.3fr;gap:6px}
+.sfx{position:relative}
+.sfx input{padding-right:24px}
+.sfx span{position:absolute;right:9px;top:50%;transform:translateY(-50%);color:var(--muted);font:500 14px var(--font-mono);pointer-events:none}
+/* Pilih inian (D° M′ S″ / Desimal sama Kiri / Kanan) */
+.seg{position:relative;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg input,.opt input{position:absolute;opacity:0;pointer-events:none}
+.seg label{display:flex;align-items:center;justify-content:center;min-height:44px;padding:7px 14px;text-align:center;cursor:pointer;font-weight:500;font-size:14px;color:var(--muted)}
+.seg input:checked+label{background:var(--accent);color:var(--on-accent);font-weight:600}
+.seg input:focus-visible+label,.opt input:focus-visible+label{outline:2px solid var(--accent);outline-offset:-2px}
+/* pilih mana Sudut-Jarak atauuu Sudut-Sudut */
+.opts{display:grid;gap:8px}
+.opt{position:relative}
+.opt label{display:block;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:10px 12px;cursor:pointer}
+.opt label b{display:block;font-weight:600}
+.opt label small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.opt input:checked+label{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.hint{margin:6px 0 0;font-size:13px;color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+/* pencetan .btn = utama oranye, .btn-ghost = polos, .btn-s = kecil di yang hasil HEHHHH NO NO EROR */
+.btn{min-height:44px;background:var(--accent);color:var(--on-accent);border:0;border-radius:6px;padding:11px 20px;font:700 18px var(--font-display);letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{filter:brightness(.94);transform:translateY(1px)}
+.btn-ghost:active{background:var(--accent-soft)}
+.btn-s:active{opacity:.8}
+.seg label:active,.opt label:active{background:var(--accent-soft)}
+button,summary,label[for],select,a[href]{cursor:pointer}
+button:disabled{cursor:not-allowed}
+.btn:focus-visible,.btn-ghost:focus-visible,.btn-s:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn-ghost{min-height:44px;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:9px 14px;font:500 14px var(--font-body);cursor:pointer}
+.btn-ghost:hover{border-color:var(--accent)}
+.btn-s{min-height:44px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:6px 14px;font:600 13px var(--font-body);cursor:pointer}
+
+/* output kalo if dia nglebokkene ga bener ngarang tenan */
+/* eror abang merah menyalaaaaa uhuyy */
+.alert{border:1px solid var(--bad);background:var(--bad-soft);color:var(--bad);border-radius:8px;padding:14px 16px;font-weight:500}
+/* hasillllll oranye berisi x_P dan y_P), plsssss*/
+.card{border:1.5px solid var(--accent);border-radius:8px;overflow:hidden;background:var(--surface)}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--accent);color:var(--on-accent);padding:4px 14px 4px 16px;font:700 19px var(--font-display);letter-spacing:.05em;text-transform:uppercase}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;background:var(--accent-soft);border-bottom:1px solid var(--accent)}
+.hero div{min-width:0}
+.hero .l{font:500 12px var(--font-mono);color:var(--accent-ink);letter-spacing:.06em}
+.hero .v{font:600 clamp(19px,3.6vw,30px) var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink);overflow-wrap:anywhere}
+.hero .v i{font-style:normal;font-size:.55em;color:var(--muted);margin-left:3px}
+table.rt{width:100%;border-collapse:collapse}
+.rt th,.rt td{padding:9px 16px;border-top:1px solid var(--line);vertical-align:top;text-align:left}
+.rt tr:first-child th,.rt tr:first-child td{border-top:0}
+.rt th{font-weight:500;color:var(--muted);width:42%}
+.rt td{font:500 14px var(--font-mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.rt td .s{display:block;color:var(--muted);font-size:12.5px;font-weight:400}
+.copybox{width:100%;margin-top:10px;min-height:120px;font:13px var(--font-mono);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px}
+/* PLOT: gambar segitiga A-P-B */
+.plot-wrap{margin-top:22px}
+.plot-wrap h2,.work h3{margin:0 0 10px;font:600 20px var(--font-display);letter-spacing:.03em;text-transform:uppercase}
+.plot{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:8px}
+.plot svg{display:block;width:100%;height:auto}
+.cap{margin:8px 2px 0;font-size:13px;color:var(--muted);display:flex;gap:6px 18px;flex-wrap:wrap}
+.key{display:inline-flex;align-items:center;gap:6px}
+.key i{display:inline-block;width:22px;height:0;border-top:3px solid}
+.key .k1{border-color:var(--ink)} .key .k2{border-color:var(--accent)}
+
+/* SVG .p-grid = garis grid, .p-ray = garis AP dan BP, .p-base = garis AB, .p-wedge = busur sudut, dst */
+/* svg classes sv gadjahmada */
+.p-frame{fill:none;stroke:var(--line)}
+.p-grid{stroke:var(--line);stroke-width:1;fill:none}
+.p-axis0{stroke:var(--muted);stroke-width:1;opacity:.55;fill:none}
+.p-tick{fill:var(--muted);font:500 11px var(--font-mono)}
+.p-axt{fill:var(--muted);font:500 11px var(--font-mono);letter-spacing:.04em}
+.p-tri{fill:var(--accent);fill-opacity:.12;stroke:none}
+.p-base{stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;fill:none}
+.p-arrow{fill:var(--ink);stroke:var(--surface);stroke-width:1.5;stroke-linejoin:round}
+.p-ray{stroke:var(--accent);stroke-width:2.6;stroke-linecap:round;fill:none}
+.p-north{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 4;fill:none}
+.p-wedge{fill:var(--accent);fill-opacity:.3;stroke:var(--accent);stroke-width:1}
+.p-az{fill:none;stroke:var(--muted);stroke-width:1.3}
+.p-azt{fill:var(--muted);font:500 11px var(--font-mono)}
+.p-pc{fill:var(--ink);stroke:var(--surface);stroke-width:2}
+.p-pp{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.p-name{fill:var(--ink);font:700 18px var(--font-display)}
+.p-name.p{fill:var(--accent-ink)}
+.p-co{fill:var(--muted);font:500 11px var(--font-mono)}
+.p-ang{fill:var(--accent-ink);font:600 12px var(--font-mono);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.p-len{fill:var(--ink);font:500 11.5px var(--font-mono);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.cmp-n{fill:var(--accent);stroke:none}
+.cmp-stem{stroke:var(--accent);stroke-width:3;stroke-linecap:round;fill:none}
+.cmp-l{fill:var(--accent-ink);font:700 16px var(--font-mono)}
+
+/* work nah yoks pedes sudah ini mripat*/
+.work{margin-top:34px;border-top:2px solid var(--ink);padding-top:16px}
+.work .note{margin:0 0 14px;color:var(--muted);max-width:70ch}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+/* kotak gede dibuka isi 3 pls nahh */
+.outer-wrap{margin-top:34px}
+.outer{border:1.5px solid var(--accent);border-radius:8px;background:var(--bg);overflow:hidden}
+.outer>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;cursor:pointer;background:var(--accent);color:var(--on-accent);font:700 20px var(--font-display);letter-spacing:.05em;text-transform:uppercase}
+.outer>summary::-webkit-details-marker{display:none}
+.otitle{display:flex;flex-direction:column}
+.otitle small{font:500 13px var(--font-body);letter-spacing:0;text-transform:none}
+.outer>summary:focus-visible{outline:2px solid var(--ink);outline-offset:-4px}
+.outer>summary .chev{border-color:var(--on-accent)}
+.outer[open]>summary .chev{transform:rotate(225deg);margin-bottom:-3px}
+.outer .inner{padding:4px 16px 20px}
+.outer .work{margin-top:18px;padding-top:0;border-top:0}
+.outer .work+.work{border-top:1px solid var(--line);padding-top:20px}
+/* rumus bukak tutup */
+.acc{border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.acc details{border-top:1px solid var(--line)}
+.acc details:first-child{border-top:0}
+.acc summary{list-style:none;display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;min-width:0}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary:hover{background:var(--accent-soft)}
+.acc summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.acc details[open]>summary{background:var(--accent-soft)}
+.s-n{flex:none;display:grid;place-items:center;width:24px;height:24px;border:1.5px solid var(--accent);border-radius:4px;color:var(--accent-ink);font:600 12px var(--font-mono)}
+.s-t{font-weight:600;flex:1 1 auto;min-width:0}
+.chev{flex:none;width:8px;height:8px;border-right:2px solid var(--accent-ink);border-bottom:2px solid var(--accent-ink);transform:rotate(45deg);margin:0 4px 3px 0;transition:transform .15s}
+.acc details[open]>summary .chev{transform:rotate(225deg);margin-bottom:-3px}
+.acc .body{padding:6px 14px 16px 50px;display:grid;gap:4px;min-width:0}
+@media (max-width:520px){.acc .body{padding-left:14px}}
+.chip{font:500 11.5px var(--font-mono);color:var(--accent-ink);background:var(--accent-soft);border:1px solid var(--accent);border-radius:4px;padding:2px 7px;width:fit-content;margin-bottom:4px}
+.lbl{margin-top:6px;font:600 11px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink)}
+.body code{display:block;font:400 13.5px/1.6 var(--font-mono);overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+.body code.mx{white-space:pre;overflow-wrap:normal}
+.body .fx{color:var(--muted)}
+.body .rs{font-weight:600;color:var(--ink)}
+.cmpwrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin-bottom:14px}
+table.ct{width:100%;border-collapse:collapse;min-width:440px}
+.ct th,.ct td{padding:9px 14px;border-top:1px solid var(--line);text-align:right;font:500 13.5px var(--font-mono);font-variant-numeric:tabular-nums}
+.ct thead th{border-top:0;font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent-soft)}
+.ct th:first-child,.ct td:first-child{text-align:left;font-family:var(--font-body);font-weight:500;color:var(--muted)}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font:600 12px var(--font-mono);background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent)}
+.badge.bad{background:var(--bad-soft);color:var(--bad);border-color:var(--bad)}
+/* juduls nama nim excel */
+.sign{margin-top:22px;border-top:2px solid var(--accent);padding-top:14px;display:grid;gap:2px}
+.sg-t{font:600 19px var(--font-display);letter-spacing:.03em;text-transform:uppercase;text-wrap:balance}
+.sg-n{font-weight:600;font-size:16px}
+.sg-id{font:500 14px var(--font-mono);color:var(--accent-ink)}
+footer{margin-top:30px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* biar rame keterangan geometri, tombol contoh, kolom zoom, petunjuk nek isian kosong */
+.geonote{margin:10px 2px 0;font-size:14px;color:var(--muted);max-width:75ch}
+.sample-row{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.sample-btn{background:var(--accent-soft);border-color:var(--accent);font-weight:600}
+.card-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.empty{margin:0;padding:14px 16px;border:1px dashed var(--line);border-radius:8px;color:var(--muted)}
+.zoombar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+.zhint{font-size:13px;color:var(--muted)}
+.plot{touch-action:pan-y pinch-zoom}
+.plot.zoomed{touch-action:none;cursor:grab;overflow:hidden}
+.plot.zoomed:active{cursor:grabbing}
