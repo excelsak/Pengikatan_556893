@@ -5,9 +5,9 @@
   --bg:#F4F2EF; --surface:#FFFFFF; --ink:#1F1A16; --muted:#6A6058; --line:#E2DCD5;
   --accent:#FF7A00; --accent-ink:#B04C00; --accent-soft:#FFEBD6; --on-accent:#1A0E00;
   --bad:#B3261E; --bad-soft:#FBE4E1;
-  --font-display:'Barlow Condensed','Arial Narrow',sans-serif;
-  --font-body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --font-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+   --font-display:Arial,Helvetica,sans-serif;
+   --font-body:Arial,Helvetica,sans-serif;
+   --font-mono:Arial,Helvetica,sans-serif;
 }
 /* black mode biar ga silaw */
 @media (prefers-color-scheme: dark){
@@ -230,3 +230,4 @@ footer{margin-top:30px;color:var(--muted);font-size:13px;border-top:1px solid va
 .plot{touch-action:pan-y pinch-zoom}
 .plot.zoomed{touch-action:none;cursor:grab;overflow:hidden}
 .plot.zoomed:active{cursor:grabbing}
+* { font-weight: 400 !important; }
