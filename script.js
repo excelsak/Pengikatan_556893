@@ -613,7 +613,6 @@ function compute(p) {
       g += '<text x="' + (L + 18) + '" y="' + (lgY + 18 + 16 * i) + '" class="p-leg">' + v[0] + ' = ' + f(v[1], 2) + '°</text>';
     });
 
-    $('gridCap').textContent = 'Satu kotak grid = ' + tickLabel(step, dec) + ' m, skala sama pada sumbu x dan y.';
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Plot segitiga A, P, B dengan panah arah utara">' + g + '</svg>';
   }
 
