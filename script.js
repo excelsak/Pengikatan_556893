@@ -466,7 +466,7 @@ function compute(p) {
   }
   function compass(cx, cy, R) {
     // Panah arah Utara (menunjuk ke atas) dengan huruf U
-    return '<g transform="translate(' + n1(cx) + ',' + n1(cy) + ')">' +
+    return '<g transform="translate(' + n1(cx) + ',' + n1(cy) + ') scale(.65)">' +
       '<text x="0" y="' + (-R - 6) + '" text-anchor="middle" class="cmp-l">U</text>' +
       '<line x1="0" y1="' + (-R + 14) + '" x2="0" y2="' + R + '" class="cmp-stem"/>' +
       '<polygon points="0,' + (-R) + ' 10,' + (-R + 22) + ' 0,' + (-R + 16) + ' -10,' + (-R + 22) + '" class="cmp-n"/></g>';
@@ -546,7 +546,7 @@ function compute(p) {
       const rad = Math.max(14, Math.min(32, len * 0.35));
       const w = wedge(vt.x, vt.y, Math.atan2(t1.y - vt.y, t1.x - vt.x), Math.atan2(t2.y - vt.y, t2.x - vt.x), rad);
       g += '<path d="' + w.path + '" class="p-wedge"/>';
-      g += '<text x="' + n1(vt.x + (rad + 16) * Math.cos(w.mid)) + '" y="' + n1(vt.y + (rad + 16) * Math.sin(w.mid) + 4) + '" text-anchor="middle" class="p-ang">' + v[3] + ' ' + f(v[4], 2) + '°</text>';
+      g += '<text x="' + n1(vt.x + (rad + 16) * Math.cos(w.mid)) + '" y="' + n1(vt.y + (rad + 16) * Math.sin(w.mid) + 4) + '" text-anchor="middle" class="p-ang">' + v[3] + '</text>';
     });
 
     // paaannnjjjjangggg
@@ -560,7 +560,7 @@ function compute(p) {
       let ang = Math.atan2(dy, dx) * DEG;
       if (ang > 90) ang -= 180;
       if (ang < -90) ang += 180;
-      g += '<text transform="translate(' + n1(mx + nx * 14) + ',' + n1(my + ny * 14 + 4) + ') rotate(' + n1(ang) + ')" text-anchor="middle" class="p-len">' + sd[4] + ' ' + f(sd[3], 3) + ' m</text>';
+      g += '<text transform="translate(' + n1(mx + nx * 14) + ',' + n1(my + ny * 14 + 4) + ') rotate(' + n1(ang) + ')" text-anchor="middle" class="p-len">d' + sd[4] + ' = ' + f(sd[3], 3) + ' m</text>';
     });
 
     // ada titik titik di titik
@@ -571,11 +571,10 @@ function compute(p) {
       const ul = Math.hypot(ux, uy) || 1;
       ux /= ul; uy /= ul;
       const lx = pt.x + ux * 17;
-      const top = uy < -0.35 ? pt.y + uy * 17 - 40 : (uy > 0.35 ? pt.y + uy * 17 + 2 : pt.y - 18);
+      const top = uy < -0.35 ? pt.y + uy * 17 - 28 : (uy > 0.35 ? pt.y + uy * 17 + 2 : pt.y - 18);
       const anc = ux > 0.35 ? 'start' : (ux < -0.35 ? 'end' : 'middle');
       g += '<text x="' + n1(lx) + '" y="' + n1(top + 15) + '" text-anchor="' + anc + '" class="p-name' + (v[4] ? ' p' : '') + '">' + v[0] + '</text>';
-      g += '<text x="' + n1(lx) + '" y="' + n1(top + 27) + '" text-anchor="' + anc + '" class="p-co">x ' + f(c.x, 2) + '</text>';
-      g += '<text x="' + n1(lx) + '" y="' + n1(top + 39) + '" text-anchor="' + anc + '" class="p-co">y ' + f(c.y, 2) + '</text>';
+      g += '<text x="' + n1(lx) + '" y="' + n1(top + 27) + '" text-anchor="' + anc + '" class="p-co">(' + f(c.x, 2) + '; ' + f(c.y, 2) + ')</text>';
     });
 
     // arah di yang palng lowong pls ojoks pating menumpuks dongg
@@ -592,6 +591,11 @@ function compute(p) {
       if (sc > bestScore) { best = c; bestScore = sc; }
     }
     g += compass(best[0], best[1], Rc);
+
+    // keterangan sudut di kiri bawah, di luar kotak plot supaya tidak menabrak titik
+    [['α', r.alpha], ['β', r.beta], ['γ', r.gamma]].forEach(function (v, i) {
+      g += '<text x="' + (L + i * 112) + '" y="' + (H - 6) + '" class="p-leg">' + v[0] + ' = ' + f(v[1], 2) + '°</text>';
+    });
 
     $('gridCap').textContent = 'Satu kotak grid = ' + tickLabel(step, dec) + ' m, skala sama pada sumbu x dan y.';
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Plot segitiga A, P, B dengan panah arah utara">' + g + '</svg>';
@@ -663,10 +667,8 @@ function compute(p) {
     const st = r.finalSteps;
     $('finSum').hidden = !st; $('finTools').hidden = !st; $('finSteps').hidden = !st;
     if (!st) {
-      $('finNote').textContent = 'Rerata A dan B hanya tersedia saat ada hitungan dari titik B. Dengan jarak AP yang Anda isi sendiri, x_P dan y_P diambil dari titik A.';
       return;
     }
-    $('finNote').textContent = 'Koordinat akhir P adalah rerata hasil dari titik A dan dari titik B. Nilai inilah yang tampil sebagai x_P dan y_P di ringkasan hasil.';
     $('finSum').innerHTML = '<div class="cmpwrap"><table class="ct"><thead><tr><th scope="col">Besaran</th><th scope="col">Dari titik A</th><th scope="col">Dari titik B</th><th scope="col">Rerata (akhir)</th></tr></thead><tbody>' +
       '<tr><td>x<sub>P</sub> (m)</td><td>' + f(r.PA.x, 3) + '</td><td>' + f(r.check.x, 3) + '</td><td><b>' + f(r.P.x, 3) + '</b></td></tr>' +
       '<tr><td>y<sub>P</sub> (m)</td><td>' + f(r.PA.y, 3) + '</td><td>' + f(r.check.y, 3) + '</td><td><b>' + f(r.P.y, 3) + '</b></td></tr>' +
@@ -679,12 +681,8 @@ function compute(p) {
     const c = r.check;
     $('chkSum').hidden = !c; $('chkTools').hidden = !c; $('chkSteps').hidden = !c;
     if (!c) {
-      $('chkNote').textContent = 'Pembanding dari titik B hanya tersedia saat jarak AP dihitung dari α dan β. Jarak AP yang Anda isi sendiri membuat titik P tidak lagi ditentukan oleh sudut β.';
       return;
     }
-    $('chkNote').textContent = r.matrix
-      ? 'Titik P dihitung ulang dari stasiun B memakai parameter u, lalu persamaan matriks A · [t, u]^T = b diperiksa dengan t dan u hasil hitungan.'
-      : 'Titik P dihitung ulang dari titik B dengan arah balik. Jika hitungan benar, hasilnya sama dengan hitungan dari titik A.';
     $('chkSum').innerHTML = '<div class="cmpwrap"><table class="ct"><thead><tr><th scope="col">Besaran</th><th scope="col">Dari titik A</th><th scope="col">Dari titik B</th><th scope="col">Selisih</th></tr></thead><tbody>' +
       '<tr><td>x<sub>P</sub> (m)</td><td>' + f(r.PA.x, 3) + '</td><td>' + f(c.x, 3) + '</td><td>' + f(c.ex, 6) + '</td></tr>' +
       '<tr><td>y<sub>P</sub> (m)</td><td>' + f(r.PA.y, 3) + '</td><td>' + f(c.y, 3) + '</td><td>' + f(c.ey, 6) + '</td></tr>' +
