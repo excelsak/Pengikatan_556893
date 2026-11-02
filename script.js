@@ -487,7 +487,7 @@ function compute(p) {
     const minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
     const minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
     const spanX = Math.max(maxX - minX, 1e-6), spanY = Math.max(maxY - minY, 1e-6);
-    const legH = 24;  // ruang kosong di bawah kotak grid untuk keterangan sudut
+    const legH = 62;  // ruang kosong di bawah kotak grid untuk kotak keterangan sudut
     const s = Math.min((aw - 2 * padX) / spanX, (ah - 2 * padY - legH) / spanY);
     const ox = L + (aw - spanX * s) / 2, oy = T + (ah - legH - spanY * s) / 2;
     const X = function (x) { return ox + (x - minX) * s; };
@@ -593,9 +593,11 @@ function compute(p) {
     }
     g += compass(best[0], best[1], Rc);
 
-    // keterangan sudut di kiri bawah, di dalam kotak grid (ruangnya disisakan lewat legH)
+    // kotak keterangan sudut di kiri bawah, di dalam kotak grid (ruangnya disisakan lewat legH)
+    const lgY = T + ah - 8 - 58;
+    g += '<rect x="' + (L + 8) + '" y="' + lgY + '" width="100" height="58" rx="3" class="p-leg-bg"/>';
     [['α', r.alpha], ['β', r.beta], ['γ', r.gamma]].forEach(function (v, i) {
-      g += '<text x="' + (L + 10 + i * 112) + '" y="' + (T + ah - 9) + '" class="p-leg">' + v[0] + ' = ' + f(v[1], 2) + '°</text>';
+      g += '<text x="' + (L + 18) + '" y="' + (lgY + 18 + 16 * i) + '" class="p-leg">' + v[0] + ' = ' + f(v[1], 2) + '°</text>';
     });
 
     $('gridCap').textContent = 'Satu kotak grid = ' + tickLabel(step, dec) + ' m, skala sama pada sumbu x dan y.';
