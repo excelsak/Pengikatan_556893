@@ -139,8 +139,10 @@ table.rt{width:100%;border-collapse:collapse}
 .p-frame{fill:none;stroke:var(--line)}
 .p-grid{stroke:var(--line);stroke-width:1;fill:none}
 .p-axis0{stroke:var(--muted);stroke-width:1;opacity:.55;fill:none}
-.p-tick{fill:var(--muted);font:500 11px var(--font-mono)}
-.p-axt{fill:var(--muted);font:500 11px var(--font-mono);letter-spacing:.04em}
+.p-tick{fill:var(--muted);font:500 11px var(--font-mono);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.p-xg{display:none}
+.plot.zout .p-xg{display:inline}
+.p-axt{fill:var(--muted);font:500 11px var(--font-mono);letter-spacing:.04em;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
 .p-tri{fill:none;stroke:none}
 .p-base{stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;fill:none}
 .p-arrow{fill:var(--ink);stroke:var(--surface);stroke-width:1.5;stroke-linejoin:round}
