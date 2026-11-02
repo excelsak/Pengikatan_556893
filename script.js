@@ -487,8 +487,9 @@ function compute(p) {
     const minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
     const minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
     const spanX = Math.max(maxX - minX, 1e-6), spanY = Math.max(maxY - minY, 1e-6);
-    const s = Math.min((aw - 2 * padX) / spanX, (ah - 2 * padY) / spanY);
-    const ox = L + (aw - spanX * s) / 2, oy = T + (ah - spanY * s) / 2;
+    const legH = 24;  // ruang kosong di bawah kotak grid untuk keterangan sudut
+    const s = Math.min((aw - 2 * padX) / spanX, (ah - 2 * padY - legH) / spanY);
+    const ox = L + (aw - spanX * s) / 2, oy = T + (ah - legH - spanY * s) / 2;
     const X = function (x) { return ox + (x - minX) * s; };
     const Y = function (y) { return oy + (maxY - y) * s; };
     const x0 = minX - (ox - L) / s, x1 = x0 + aw / s, y1 = maxY + (oy - T) / s, y0 = y1 - ah / s;
@@ -543,10 +544,10 @@ function compute(p) {
     [[a, b, p, 'α', r.alpha], [b, a, p, 'β', r.beta], [p, a, b, 'γ', r.gamma]].forEach(function (v) {
       const vt = v[0], t1 = v[1], t2 = v[2];
       const len = Math.min(Math.hypot(t1.x - vt.x, t1.y - vt.y), Math.hypot(t2.x - vt.x, t2.y - vt.y));
-      const rad = Math.max(14, Math.min(32, len * 0.35));
+      const rad = Math.max(26, Math.min(40, len * 0.35));
       const w = wedge(vt.x, vt.y, Math.atan2(t1.y - vt.y, t1.x - vt.x), Math.atan2(t2.y - vt.y, t2.x - vt.x), rad);
       g += '<path d="' + w.path + '" class="p-wedge"/>';
-      g += '<text x="' + n1(vt.x + (rad + 16) * Math.cos(w.mid)) + '" y="' + n1(vt.y + (rad + 16) * Math.sin(w.mid) + 4) + '" text-anchor="middle" class="p-ang">' + v[3] + '</text>';
+      g += '<text x="' + n1(vt.x + rad * 0.68 * Math.cos(w.mid)) + '" y="' + n1(vt.y + rad * 0.68 * Math.sin(w.mid) + 4) + '" text-anchor="middle" class="p-ang">' + v[3] + '</text>';
     });
 
     // paaannnjjjjangggg
@@ -579,7 +580,7 @@ function compute(p) {
 
     // arah di yang palng lowong pls ojoks pating menumpuks dongg
     const Rc = 28, m = Rc + 26;
-    const cands = [[L + aw - m, T + m], [L + m, T + m], [L + aw - m, T + ah - m], [L + m, T + ah - m]];
+    const cands = [[L + aw - m, T + m], [L + m, T + m], [L + aw - m, T + ah - m]];
     let best = null, bestScore = -1;
     for (let i = 0; i < cands.length; i++) {
       const c = cands[i];
@@ -592,9 +593,9 @@ function compute(p) {
     }
     g += compass(best[0], best[1], Rc);
 
-    // keterangan sudut di kiri bawah, di luar kotak plot supaya tidak menabrak titik
+    // keterangan sudut di kiri bawah, di dalam kotak grid (ruangnya disisakan lewat legH)
     [['α', r.alpha], ['β', r.beta], ['γ', r.gamma]].forEach(function (v, i) {
-      g += '<text x="' + (L + i * 112) + '" y="' + (H - 6) + '" class="p-leg">' + v[0] + ' = ' + f(v[1], 2) + '°</text>';
+      g += '<text x="' + (L + 10 + i * 112) + '" y="' + (T + ah - 9) + '" class="p-leg">' + v[0] + ' = ' + f(v[1], 2) + '°</text>';
     });
 
     $('gridCap').textContent = 'Satu kotak grid = ' + tickLabel(step, dec) + ' m, skala sama pada sumbu x dan y.';
@@ -783,12 +784,14 @@ function compute(p) {
     sv.setAttribute('viewBox', v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
     $('plot').classList.toggle('zoomed', !!vb);
   }
+  // batas geser: kalau diperbesar (w < VW) tidak keluar dari gambar, kalau diperkecil (w > VW) gambar boleh bergeser di dalam bidang lebar
+  function clampV(v, full, w) { return Math.min(Math.max(v, Math.min(0, full - w)), Math.max(0, full - w)); }
   function zoomBy(fac, fx, fy) {
     const cur = vb || { x: 0, y: 0, w: VW, h: VH };
-    let w = Math.min(VW, Math.max(VW / 8, cur.w / fac));
-    if (w >= VW - 0.5) { vb = null; setVB(); return; }
+    let w = Math.min(VW * 3, Math.max(VW / 8, cur.w / fac));
+    if (Math.abs(w - VW) < 0.5) { vb = null; setVB(); return; }
     const h = w * VH / VW, px = cur.x + fx * cur.w, py = cur.y + fy * cur.h;
-    vb = { x: Math.min(Math.max(px - fx * w, 0), VW - w), y: Math.min(Math.max(py - fy * h, 0), VH - h), w: w, h: h };
+    vb = { x: clampV(px - fx * w, VW, w), y: clampV(py - fy * h, VH, h), w: w, h: h };
     setVB();
   }
   $('zIn').addEventListener('click', function () { zoomBy(1.6, 0.5, 0.5); });
@@ -822,8 +825,8 @@ function compute(p) {
       }
       if (!vb) return;
       const r = sv.getBoundingClientRect();
-      vb.x = Math.min(Math.max(vb.x - (e.clientX - prev.x) / r.width * vb.w, 0), VW - vb.w);
-      vb.y = Math.min(Math.max(vb.y - (e.clientY - prev.y) / r.height * vb.h, 0), VH - vb.h);
+      vb.x = clampV(vb.x - (e.clientX - prev.x) / r.width * vb.w, VW, vb.w);
+      vb.y = clampV(vb.y - (e.clientY - prev.y) / r.height * vb.h, VH, vb.h);
       ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
       setVB();
     });
