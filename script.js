@@ -496,7 +496,20 @@ function compute(p) {
     const step = niceStep(Math.max(aw / s, ah / s));
     const dec = step >= 1 ? 0 : Math.min(6, Math.ceil(-Math.log10(step)));
 
-    let g = '<rect x="' + L + '" y="' + T + '" width="' + aw + '" height="' + ah + '" class="p-frame"/>';
+    // grid tambahan di luar bingkai, hanya tampil saat plot diperkecil (lihat CSS .zout)
+    const EX0 = -2 * W, EX1 = 3 * W, EY0 = -2 * H, EY1 = 3 * H;
+    const ln = function (x1, y1, x2, y2, cl) { return '<line x1="' + n1(x1) + '" y1="' + n1(y1) + '" x2="' + n1(x2) + '" y2="' + n1(y2) + '" class="' + cl + '"/>'; };
+    let ext = '';
+    for (let i = Math.ceil((x0 + (EX0 - L) / s) / step); i <= Math.floor((x0 + (EX1 - L) / s) / step); i++) {
+      const gx = X(i * step), cl = i === 0 ? 'p-axis0' : 'p-grid';
+      ext += (gx >= L && gx <= L + aw) ? ln(gx, EY0, gx, T, cl) + ln(gx, T + ah, gx, EY1, cl) : ln(gx, EY0, gx, EY1, cl);
+    }
+    for (let i = Math.ceil((y1 - (EY1 - T) / s) / step); i <= Math.floor((y1 - (EY0 - T) / s) / step); i++) {
+      const gy = Y(i * step), cl = i === 0 ? 'p-axis0' : 'p-grid';
+      ext += (gy >= T && gy <= T + ah) ? ln(EX0, gy, L, gy, cl) + ln(L + aw, gy, EX1, gy, cl) : ln(EX0, gy, EX1, gy, cl);
+    }
+
+    let g = '<g class="p-xg">' + ext + '</g><rect x="' + L + '" y="' + T + '" width="' + aw + '" height="' + ah + '" class="p-frame"/>';
     for (let i = Math.ceil(x0 / step); i <= Math.floor(x1 / step); i++) {
       const gx = X(i * step);
       g += '<line x1="' + n1(gx) + '" y1="' + T + '" x2="' + n1(gx) + '" y2="' + (T + ah) + '" class="' + (i === 0 ? 'p-axis0' : 'p-grid') + '"/>';
@@ -785,6 +798,7 @@ function compute(p) {
     const v = vb || { x: 0, y: 0, w: VW, h: VH };
     sv.setAttribute('viewBox', v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
     $('plot').classList.toggle('zoomed', !!vb);
+    $('plot').classList.toggle('zout', !!vb && vb.w > VW + 0.5);  // diperkecil: tampilkan grid tambahan
   }
   // batas geser: kalau diperbesar (w < VW) tidak keluar dari gambar, kalau diperkecil (w > VW) gambar boleh bergeser di dalam bidang lebar
   function clampV(v, full, w) { return Math.min(Math.max(v, Math.min(0, full - w)), Math.max(0, full - w)); }
