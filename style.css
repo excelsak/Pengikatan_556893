@@ -1,6 +1,6 @@
 /* leyot */
 /*CSS pls warna, ukuran, tata letak)
-   1. nah iki warna dan font pls bisa */
+   1. nah iki warna dan font pls bisa alhamduilillah */
 :root{
   --bg:#F4F6F4; --surface:#FFFFFF; --ink:#1B211E; --muted:#5C6661; --line:#DCE2DE;
   --accent:#2F5D50; --accent-ink:#2F5D50; --accent-soft:#E7EFEB; --on-accent:#FFFFFF;
@@ -154,7 +154,8 @@ table.rt{width:100%;border-collapse:collapse}
 .p-name{fill:var(--ink);font:700 18px var(--font-display)}
 .p-name.p{fill:var(--accent-ink)}
 .p-co{fill:var(--muted);font:500 11px var(--font-mono)}
-.p-leg{fill:var(--ink);font:400 12px var(--font-body);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.p-leg-bg{fill:var(--surface);stroke:var(--line)}
+.p-leg{fill:var(--ink);font:400 12px var(--font-body)}
 .p-ang{fill:var(--accent-ink);font:600 12px var(--font-mono);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
 .p-len{fill:var(--ink);font:500 11.5px var(--font-mono);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
 .cmp-n{fill:var(--ink);stroke:none}
